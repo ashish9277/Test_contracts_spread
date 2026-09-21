@@ -73,3 +73,27 @@ connection uses TWS paper trading on port `7497` with client ID `35`.
 ```bash
 python3 prod/infy_arbitrage_sim.py
 ```
+
+## Historical backtest
+
+The `prod/backtest.py` script downloads daily historical bars for the Infosys
+India share and US ADR through IBKR, joins them with the USD/INR history in
+`prod/usdinr.csv`, and simulates entry and exit signals. It does not place
+orders. The default configuration uses a five-year period, a 3% entry
+threshold, a 0.5% exit threshold, and a 10-day maximum holding period.
+
+Run it from the repository directory with:
+
+```bash
+python3 prod/backtest.py
+```
+
+The backtest uses these CSV files:
+
+- `prod/usdinr.csv`: USD/INR input data
+- `prod/infy_backtest_data.csv`: aligned price and deviation data
+- `prod/infy_backtest_trades.csv`: simulated trade records
+- `prod/infy_equity_curve.csv`: simulated portfolio values
+
+The historical-data script requires `pandas`, `numpy`, and `matplotlib` in
+addition to the IBKR API package.
