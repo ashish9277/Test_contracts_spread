@@ -59,3 +59,17 @@ and prints `NO ORDERS WERE SUBMITTED` before exiting.
 
 These IDs make it easy to associate each callback with the lookup that
 generated it.
+
+## Simulation script
+
+The `prod/infy_arbitrage_sim.py` script builds on the contract lookup by
+requesting delayed market data and calculating an Infosys India versus US ADR
+relative-value signal using a manually supplied USD/INR rate. It is a
+simulation only: it contains no order imports and never calls `placeOrder()`.
+
+Set `MANUAL_USDINR` near the top of the file before running it. The default
+connection uses TWS paper trading on port `7497` with client ID `35`.
+
+```bash
+python3 prod/infy_arbitrage_sim.py
+```
