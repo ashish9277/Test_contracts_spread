@@ -37,7 +37,7 @@ usual TWS paper-trading port. Common alternatives are:
 | IB Gateway | Paper trading | 4002 |
 | IB Gateway | Live trading | 4001 |
 
-Update the `app.connect()` call in `test_infy_pair.py` if your local session
+Update the `app.connect()` call in `test_unit/test_infy_pair.py` if your local session
 uses a different host, port, or client ID. Keep the API session open before
 running the script.
 
@@ -46,7 +46,7 @@ running the script.
 From the repository directory:
 
 ```bash
-python3 test_infy_pair.py
+python3 test_unit/test_infy_pair.py
 ```
 
 The script waits up to 15 seconds for the contract responses, disconnects,
