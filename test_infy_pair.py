@@ -1,3 +1,11 @@
+"""Look up Infosys contracts listed in India and the United States.
+
+This script connects to a locally running Interactive Brokers TWS or IB
+Gateway session, requests contract metadata for the NSE Infosys share and the
+US-listed Infosys ADR, prints the matching details, and then disconnects.
+It only calls ``reqContractDetails`` and never submits an order.
+"""
+
 from ibapi.client import EClient
 from ibapi.wrapper import EWrapper
 from ibapi.contract import Contract
@@ -7,8 +15,10 @@ import time
 
 
 class IBKRTest(EWrapper, EClient):
+    """IBKR callback client used to compare the two Infosys listings."""
 
     def __init__(self):
+        """Initialize the API client with this object as its callback wrapper."""
         EClient.__init__(self, self)
 
     # ============================================================
@@ -17,7 +27,10 @@ class IBKRTest(EWrapper, EClient):
 
     def nextValidId(self, orderId):
         """
-        Called by IBKR after a successful API connection.
+        Start the contract lookups after IBKR confirms the connection.
+
+        ``orderId`` is displayed as a connection diagnostic only; this script
+        does not place orders or otherwise use it.
         """
 
         print("\n" + "=" * 70)
@@ -41,10 +54,10 @@ class IBKRTest(EWrapper, EClient):
         advancedOrderRejectJson=""
     ):
         """
-        Callback used by the current IBKR API version.
+        Print API errors and informational messages from IBKR.
 
-        Some messages such as 2104/2106/2158 are informational
-        connectivity messages rather than actual failures.
+        Codes such as 2104, 2106, and 2158 commonly describe connectivity
+        status rather than a failed contract request.
         """
 
         print(
@@ -61,7 +74,10 @@ class IBKRTest(EWrapper, EClient):
 
     def contractDetails(self, reqId, contractDetails):
         """
-        Called whenever IBKR finds a contract matching our search.
+        Print each contract matching one of the two lookup requests.
+
+        Request 1001 represents Infosys on NSE in INR. Request 1002 represents
+        the Infosys US ADR discovered through SMART in USD.
         """
 
         c = contractDetails.contract
@@ -94,6 +110,7 @@ class IBKRTest(EWrapper, EClient):
     # ============================================================
 
     def contractDetailsEnd(self, reqId):
+        """Report that IBKR has finished returning results for a request."""
 
         if reqId == 1001:
 
@@ -117,6 +134,7 @@ class IBKRTest(EWrapper, EClient):
     # ============================================================
 
     def find_contracts(self):
+        """Request metadata for the India share and the US ADR."""
 
         # --------------------------------------------------------
         # 1. INFOSYS INDIA
